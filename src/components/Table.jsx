@@ -47,8 +47,6 @@ export default function TableCustom({ rows }) {
     searchParams("id") ? searchParams("id") : ""
   );
   const filteredData = useMemo(() => {
-    console.log(filter);
-
     if (filter === "") {
       return rows;
     }
