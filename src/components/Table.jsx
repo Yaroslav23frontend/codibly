@@ -35,7 +35,8 @@ export default function TableCustom({ rows }) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    naviogate(`../per_page=${rowsPerPage}&page=${newPage}&id=${filter}`);
+
+    naviogate(`../?per_page=${rowsPerPage}&page=${newPage}&id=${filter}`);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -62,7 +63,7 @@ export default function TableCustom({ rows }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ maxWidth: 480, width: "100%", padding: 1.5 }}
+      sx={{ maxWidth: 480, width: "100%", padding: 1.5, maxHeight: "500px" }}
     >
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <TextField
@@ -84,8 +85,7 @@ export default function TableCustom({ rows }) {
           {mode === "ligth" ? <Brightness4Icon /> : <Brightness7Icon />}
         </IconButton>
       </Box>
-
-      <Table aria-label="a dense table">
+      <Table aria-label="a dense table" sx={{ maxHeight: "500px" }}>
         <TableHead>
           <TableRow>
             <TableCell component="th" sx={{ width: 160, fontWeight: 600 }}>
@@ -115,8 +115,8 @@ export default function TableCustom({ rows }) {
           ))}
 
           {emptyRows > 0 && (
-            <TableRow sx={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
+            <TableRow>
+              <TableCell colSpan={1} />
             </TableRow>
           )}
         </TableBody>
