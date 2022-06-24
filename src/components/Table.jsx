@@ -15,8 +15,10 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import IconButton from "@mui/material/IconButton";
 import { useThemeValue } from "../context/ThemeValueContext";
-import { Box } from "@mui/material";
-export default function TableCustom({ rows }) {
+import { Box, Typography } from "@mui/material";
+import useFetch from "../hooks/useFetch";
+import { useEffect } from "react";
+export default function TableCustom() {
   const queryString = window.location.search;
   const { setMode, mode } = useThemeValue();
   function searchParams(param) {
@@ -24,123 +26,166 @@ export default function TableCustom({ rows }) {
     return urlParams.get(param);
   }
   const [page, setPage] = useState(
-    searchParams("page") ? searchParams("page") : 0
+    searchParams("page") ? searchParams("page") - 1 : 0
   );
   const [rowsPerPage, setRowsPerPage] = useState(
     searchParams("per_page") ? searchParams("per_page") : 5
   );
   const naviogate = useNavigate();
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
 
-    naviogate(`../?per_page=${rowsPerPage}&page=${newPage}&id=${filter}`);
+    naviogate(`../?page=${newPage + 1}&per_page=${rowsPerPage}&id=${filter}`);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    naviogate(`../?per_page=${event.target.value}&page=${page}&id=${filter}`);
+    naviogate(
+      `../?page=${page + 1}&per_page=${event.target.value}&id=${filter}`
+    );
     setPage(0);
   };
   const [filter, setFilter] = useState(
     searchParams("id") ? searchParams("id") : ""
   );
-  const filteredData = useMemo(() => {
-    if (filter === "") {
-      return rows;
-    }
-    const result = rows.filter(
-      (el) => `${el.id}`.includes(`${filter}`) !== false
-    );
-    return result;
-  }, [filter, rows]);
+  const { fetchData, data, total, error } = useFetch();
+  useEffect(() => {
+    fetchData("https://reqres.in/api/products", page + 1, rowsPerPage, filter);
+  }, [page, rowsPerPage, filter]);
   function onChangeFilter(e) {
     setFilter(e.target.value);
-    naviogate(`../?per_page=${rowsPerPage}&page=${page}&id=${e.target.value}`);
+    naviogate(`../?page=${page}&per_page=${rowsPerPage}&id=${e.target.value}`);
   }
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0;
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ maxWidth: 480, width: "100%", padding: 1.5, maxHeight: "500px" }}
-    >
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <TextField
-          label="Size"
-          id="outlined-size-small"
-          defaultValue="Small"
-          size="small"
-          type="number"
-          value={filter}
-          onChange={(e) => {
-            onChangeFilter(e);
-          }}
-        />
-        <IconButton
-          onClick={() => {
-            setMode(mode === "dark" ? "light" : "dark");
+    <>
+      <TableContainer
+        component={Paper}
+        sx={{
+          maxWidth: 480,
+          width: "100%",
+          padding: 1.5,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+            justifySelf: "flex-start",
+            alignSelf: "flex-start",
           }}
         >
-          {mode === "ligth" ? <Brightness4Icon /> : <Brightness7Icon />}
-        </IconButton>
-      </Box>
-      <Table aria-label="a dense table" sx={{ maxHeight: "500px" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell component="th" sx={{ width: 160, fontWeight: 600 }}>
-              Id
-            </TableCell>
-            <TableCell component="th" sx={{ width: 160, fontWeight: 600 }}>
-              Name
-            </TableCell>
-            <TableCell component="th" sx={{ width: 160, fontWeight: 600 }}>
-              Year
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? filteredData.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage
-              )
-            : filteredData
-          ).map((row) => (
-            <TableRow key={row.id} sx={{ backgroundColor: row.color }}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell sx={{ width: 160 }}>{row.name}</TableCell>
-              <TableCell sx={{ width: 160 }}>{row.year}</TableCell>
-            </TableRow>
-          ))}
+          <TextField
+            label="Size"
+            id="outlined-size-small"
+            defaultValue="Small"
+            size="small"
+            type="number"
+            value={filter}
+            onChange={(e) => {
+              onChangeFilter(e);
+            }}
+          />
 
-          {emptyRows > 0 && (
-            <TableRow>
-              <TableCell colSpan={1} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={filteredData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          <IconButton
+            onClick={() => {
+              setMode(mode === "dark" ? "light" : "dark");
+            }}
+          >
+            {mode === "ligth" ? <Brightness4Icon /> : <Brightness7Icon />}
+          </IconButton>
+        </Box>
+        {error !== "" ? (
+          <Box
+            sx={{
+              height: "100%",
+              height: "500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography>{error}</Typography>
+          </Box>
+        ) : (
+          <>
+            <Table
+              aria-label="a dense table"
+              sx={{ maxHeight: "500px", height: "500px" }}
+            >
+              <TableHead>
+                <TableRow sx={{ height: 10 }}>
+                  <TableCell
+                    component="th"
+                    sx={{ width: 160, fontWeight: 600 }}
+                  >
+                    Id
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    sx={{ width: 160, fontWeight: 600 }}
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell
+                    component="th"
+                    sx={{ width: 160, fontWeight: 600 }}
+                  >
+                    Year
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    sx={{ backgroundColor: row.color, height: 10 }}
+                  >
+                    <TableCell>{row.id}</TableCell>
+                    <TableCell sx={{ width: 160 }}>{row.name}</TableCell>
+                    <TableCell sx={{ width: 160 }}>{row.year}</TableCell>
+                  </TableRow>
+                ))}
+
+                {emptyRows > 0 && (
+                  <TableRow sx={{ width: "100%" }}>
+                    <TableCell colSpan={3} />
+                  </TableRow>
+                )}
+              </TableBody>
+
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    colSpan={3}
+                    count={total}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    }}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </>
+        )}
+      </TableContainer>
+    </>
   );
 }

@@ -7,9 +7,10 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-
+import useFetch from "../hooks/useFetch";
 export default function TablePaginationActions(props) {
   const theme = useTheme();
+  const { data, error, loading } = useFetch("https://reqres.in/api/products");
   const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (event) => {
