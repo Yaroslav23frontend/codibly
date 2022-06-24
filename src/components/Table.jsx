@@ -102,7 +102,7 @@ export default function TableCustom() {
           <Box
             sx={{
               height: "100%",
-              height: "500px",
+              height: "200px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -112,10 +112,7 @@ export default function TableCustom() {
           </Box>
         ) : (
           <>
-            <Table
-              aria-label="a dense table"
-              sx={{ maxHeight: "500px", height: "500px" }}
-            >
+            <Table aria-label="a dense table" sx={{ maxHeight: "500px" }}>
               <TableHead>
                 <TableRow sx={{ height: 10 }}>
                   <TableCell
@@ -150,11 +147,9 @@ export default function TableCustom() {
                   </TableRow>
                 ))}
 
-                {emptyRows > 0 && (
-                  <TableRow sx={{ width: "100%" }}>
-                    <TableCell colSpan={3} />
-                  </TableRow>
-                )}
+                <TableRow sx={{ width: "100%" }}>
+                  <TableCell colSpan={3} />
+                </TableRow>
               </TableBody>
 
               <TableFooter>
