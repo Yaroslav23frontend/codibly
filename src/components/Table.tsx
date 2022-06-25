@@ -18,8 +18,11 @@ import { useThemeValue } from '../context/ThemeValueContext';
 import { Box, Typography } from '@mui/material';
 import { useFetch } from '../hooks/useFetch.ts';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { uploadTable } from '../store/action';
 export default function TableCustom() {
   const queryString = window.location.search;
+  const data = useSelector<object>((state) => state.table);
   const { setMode, mode } = useThemeValue();
   function searchParams(param: string) {
     const urlParams = new URLSearchParams(queryString);
@@ -49,9 +52,15 @@ export default function TableCustom() {
   const [filter, setFilter] = useState(
     searchParams('id') ? searchParams('id') : ''
   );
-  const { fetchData, data, total, error } = useFetch();
+  const { fetchData, total, error } = useFetch();
   useEffect(() => {
-    fetchData('https://reqres.in/api/products', page + 1, rowsPerPage, filter);
+    fetchData(
+      'https://reqres.in/api/products',
+      page + 1,
+      rowsPerPage,
+      filter,
+      uploadTable
+    );
   }, [page, rowsPerPage, filter, fetchData]);
   function onChangeFilter(e) {
     setFilter(e.target.value);

@@ -1,5 +1,8 @@
 import { uploadTable } from "../action";
-export function reducerTable(state = [], action) {
+type ACTIONTYPE =
+  { type: string; payload: Array<object> }
+
+export function reducerTable(state = [], action: ACTIONTYPE) {
   switch (action.type) {
     case uploadTable:
       return action.payload;

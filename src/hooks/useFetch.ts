@@ -1,7 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { ActionTypes } from "@mui/base";
 
 export function useFetch() {
+  const dispatch = useDispatch()
   const [data, setData] = useState<Array<object> | undefined>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -16,7 +19,8 @@ export function useFetch() {
     url: string,
     page: number,
     per_page: number,
-    id: number | string
+    id: number | string,
+    action: string
   ) {
     console.log(`${url}/?page=${page}&per_page=${per_page}&id=${id}`);
     axios
@@ -25,10 +29,10 @@ export function useFetch() {
         console.log(result);
         setError("");
         if (id !== "") {
-          setData([result.data.data]);
+          dispatch({ type: action, payload: [result.data.data] })
           setTotal(1);
         } else {
-          setData(result.data.data);
+          dispatch({ type: action, payload: result.data.data })
           setTotal(result.data.total);
         }
       })
@@ -39,7 +43,6 @@ export function useFetch() {
   }
 
   const values = {
-    data,
     loading,
     error,
     fetchData,
