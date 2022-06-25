@@ -1,9 +1,9 @@
+import React from "react";
 import { Button } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-
-export default function NotFound() {
+const NotFound: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Paper sx={styles.paper}>
@@ -20,7 +20,8 @@ export default function NotFound() {
       </Button>
     </Paper>
   );
-}
+};
+
 const styles = {
   paper: {
     position: "absolute",
@@ -38,3 +39,5 @@ const styles = {
     padding: 2,
   },
 };
+
+export default NotFound;

@@ -1,35 +1,35 @@
-import { useState, useMemo } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TablePaginationActions from "./TablePaginationAction";
-import TableHead from "@mui/material/TableHead";
-import TextField from "@mui/material/TextField";
-import { useNavigate } from "react-router-dom";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import IconButton from "@mui/material/IconButton";
-import { useThemeValue } from "../context/ThemeValueContext";
-import { Box, Typography } from "@mui/material";
-import useFetch from "../hooks/useFetch";
-import { useEffect } from "react";
+import { useState } from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableFooter from '@mui/material/TableFooter';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import TablePaginationActions from './TablePaginationAction.tsx';
+import TableHead from '@mui/material/TableHead';
+import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import IconButton from '@mui/material/IconButton';
+import { useThemeValue } from '../context/ThemeValueContext';
+import { Box, Typography } from '@mui/material';
+import { useFetch } from '../hooks/useFetch.ts';
+import { useEffect } from 'react';
 export default function TableCustom() {
   const queryString = window.location.search;
   const { setMode, mode } = useThemeValue();
-  function searchParams(param) {
+  function searchParams(param: string) {
     const urlParams = new URLSearchParams(queryString);
-    return urlParams.get(param);
+    return Number(urlParams.get(param));
   }
-  const [page, setPage] = useState(
-    searchParams("page") ? searchParams("page") - 1 : 0
+  const [page, setPage] = useState<number>(
+    searchParams('page') ? searchParams('page') - 1 : 0
   );
-  const [rowsPerPage, setRowsPerPage] = useState(
-    searchParams("per_page") ? searchParams("per_page") : 5
+  const [rowsPerPage, setRowsPerPage] = useState<number>(
+    searchParams('per_page') ? searchParams('per_page') : 5
   );
   const naviogate = useNavigate();
 
@@ -47,35 +47,33 @@ export default function TableCustom() {
     setPage(0);
   };
   const [filter, setFilter] = useState(
-    searchParams("id") ? searchParams("id") : ""
+    searchParams('id') ? searchParams('id') : ''
   );
   const { fetchData, data, total, error } = useFetch();
   useEffect(() => {
-    fetchData("https://reqres.in/api/products", page + 1, rowsPerPage, filter);
-  }, [page, rowsPerPage, filter]);
+    fetchData('https://reqres.in/api/products', page + 1, rowsPerPage, filter);
+  }, [page, rowsPerPage, filter, fetchData]);
   function onChangeFilter(e) {
     setFilter(e.target.value);
     naviogate(`../?page=${page}&per_page=${rowsPerPage}&id=${e.target.value}`);
   }
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - total) : 0;
   return (
     <>
       <TableContainer
         component={Paper}
         sx={{
           maxWidth: 480,
-          width: "100%",
-          padding: 1.5,
+          width: '100%',
+          padding: 1.5
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-            justifySelf: "flex-start",
-            alignSelf: "flex-start",
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+            justifySelf: 'flex-start',
+            alignSelf: 'flex-start'
           }}
         >
           <TextField
@@ -92,27 +90,26 @@ export default function TableCustom() {
 
           <IconButton
             onClick={() => {
-              setMode(mode === "dark" ? "light" : "dark");
+              setMode(mode === 'dark' ? 'light' : 'dark');
             }}
           >
-            {mode === "ligth" ? <Brightness4Icon /> : <Brightness7Icon />}
+            {mode === 'ligth' ? <Brightness4Icon /> : <Brightness7Icon />}
           </IconButton>
         </Box>
-        {error !== "" ? (
+        {error !== '' ? (
           <Box
             sx={{
-              height: "100%",
-              height: "200px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
+              height: '200px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
             <Typography>{error}</Typography>
           </Box>
         ) : (
           <>
-            <Table aria-label="a dense table" sx={{ maxHeight: "500px" }}>
+            <Table aria-label="a dense table" sx={{ maxHeight: '500px' }}>
               <TableHead>
                 <TableRow sx={{ height: 10 }}>
                   <TableCell
@@ -147,7 +144,7 @@ export default function TableCustom() {
                   </TableRow>
                 ))}
 
-                <TableRow sx={{ width: "100%" }}>
+                <TableRow sx={{ width: '100%' }}>
                   <TableCell colSpan={3} />
                 </TableRow>
               </TableBody>
@@ -159,7 +156,7 @@ export default function TableCustom() {
                       5,
                       10,
                       25,
-                      { label: "All", value: -1 },
+                      { label: 'All', value: -1 }
                     ]}
                     colSpan={3}
                     count={total}
@@ -167,9 +164,9 @@ export default function TableCustom() {
                     page={page}
                     SelectProps={{
                       inputProps: {
-                        "aria-label": "rows per page",
+                        'aria-label': 'rows per page'
                       },
-                      native: true,
+                      native: true
                     }}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}

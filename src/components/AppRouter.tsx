@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import NotFound from "../pages/NotFound";
-import Pages from "../pages/Pages";
+import NotFound from "../pages/NotFound.tsx";
+import Pages from "../pages/Pages.tsx";
 export default function AppRouter() {
   return (
     <Routes>

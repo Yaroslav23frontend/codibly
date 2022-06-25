@@ -1,18 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-export default function useFetch() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(0);
-  //   const [perPage, setPerPage] = useState(5);
-  //   const [id, setId] = useState("");
-  function fetchData(url, page, per_page, id) {
+
+export function useFetch() {
+  const [data, setData] = useState<Array<object> | undefined>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+  const [total, setTotal] = useState<number>(0);
+  type DATA = {
+    data: {
+      data: Array<object>,
+      total: number
+    }
+  }
+  function fetchData(
+    url: string,
+    page: number,
+    per_page: number,
+    id: number | string
+  ) {
     console.log(`${url}/?page=${page}&per_page=${per_page}&id=${id}`);
     axios
       .get(`${url}/?page=${page}&per_page=${per_page}&id=${id}`)
-      .then((result) => {
+      .then((result: DATA) => {
         console.log(result);
         setError("");
         if (id !== "") {
@@ -26,7 +35,7 @@ export default function useFetch() {
       .catch((error) => {
         setError(error.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setLoading(true));
   }
 
   const values = {
