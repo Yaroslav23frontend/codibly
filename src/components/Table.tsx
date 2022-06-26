@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import { useThemeValue } from '../context/ThemeValueContext';
 import { Box, Typography } from '@mui/material';
 import { useFetch } from '../hooks/useFetch.ts';
@@ -37,7 +38,7 @@ export default function TableCustom() {
     return Number(pathname);
   }
   console.log(urlPath());
-  const [page, setPage] = useState<number>(urlPath() - 1);
+  const [page, setPage] = useState<number>(urlPath());
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     searchParams('per_page') ? searchParams('per_page') : 5
   );
@@ -51,7 +52,8 @@ export default function TableCustom() {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    navigate(`../${page + 1}/?per_page=${event.target.value}&id=${filter}`);
+    setPage(1);
+    navigate(`../${page}/?per_page=${event.target.value}&id=${filter}`);
   };
   const [filter, setFilter] = useState(
     searchParams('id') ? searchParams('id') : ''
@@ -63,7 +65,7 @@ export default function TableCustom() {
     } else {
       fetchData(
         'https://reqres.in/api/products',
-        page + 1,
+        page,
         rowsPerPage,
         filter,
         uploadTable
@@ -72,13 +74,9 @@ export default function TableCustom() {
   }, [page, rowsPerPage, filter]);
   function onChangeFilter(e) {
     setFilter(e.target.value);
-    navigate(
-      `../${page + 1}/?page=${page}&per_page=${rowsPerPage}&id=${
-        e.target.value
-      }`
-    );
+    navigate(`../${page}/?per_page=${rowsPerPage}&id=${e.target.value}`);
     if (isNaN(page)) {
-      setPage(0);
+      setPage(1);
     }
   }
   return (
@@ -113,7 +111,12 @@ export default function TableCustom() {
             InputProps={{
               endAdornment:
                 filter !== '' ? (
-                  <IconButton onClick={() => setFilter('')}>
+                  <IconButton
+                    onClick={() => {
+                      setFilter('');
+                      navigate(`../${page}/?per_page=${rowsPerPage}&id=`);
+                    }}
+                  >
                     <BackspaceIcon />
                   </IconButton>
                 ) : (
@@ -136,10 +139,19 @@ export default function TableCustom() {
               height: '200px',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              flexDirection: 'column'
             }}
           >
             <Typography>Not found</Typography>
+            <Button
+              onClick={() => {
+                setPage(1);
+                navigate(`../1/?per_page=${rowsPerPage}&id=`);
+              }}
+            >
+              Home
+            </Button>
           </Box>
         ) : (
           <>
