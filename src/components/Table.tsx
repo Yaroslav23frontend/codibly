@@ -38,7 +38,7 @@ export default function TableCustom() {
     return Number(pathname);
   }
   console.log(urlPath());
-  const [page, setPage] = useState<number>(urlPath());
+  const [page, setPage] = useState<number>(urlPath() !== 0 ? urlPath() : 1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(
     searchParams('per_page') ? searchParams('per_page') : 5
   );
