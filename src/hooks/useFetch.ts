@@ -1,11 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { ActionTypes } from "@mui/base";
+
 
 export function useFetch() {
   const dispatch = useDispatch()
-  const [data, setData] = useState<Array<object> | undefined>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [total, setTotal] = useState<number>(0);
@@ -47,6 +46,7 @@ export function useFetch() {
     error,
     fetchData,
     total,
+    setError
   };
   return values;
 }
