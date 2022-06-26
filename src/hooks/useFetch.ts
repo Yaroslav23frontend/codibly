@@ -25,7 +25,6 @@ export function useFetch() {
     axios
       .get(`${url}/?page=${page}&per_page=${per_page}&id=${id}`)
       .then((result: DATA) => {
-        console.log(result);
         setError("");
         if (id !== "") {
           dispatch({ type: action, payload: [result.data.data] })

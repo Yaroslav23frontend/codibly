@@ -21,6 +21,22 @@ import { useSelector } from 'react-redux';
 import { uploadTable } from '../store/action';
 import { IRootState } from '../store/store';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import { makeStyles } from '@material-ui/styles';
+const useStyles = makeStyles({
+  input: {
+    '& input[type=number]': {
+      '-moz-appearance': 'textfield'
+    },
+    '& input[type=number]::-webkit-outer-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0
+    },
+    '& input[type=number]::-webkit-inner-spin-button': {
+      '-webkit-appearance': 'none',
+      margin: 0
+    }
+  }
+});
 export default function TableCustom() {
   const queryString = window.location.search;
   const data = useSelector((state: IRootState) => state.table);
@@ -47,7 +63,7 @@ export default function TableCustom() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
 
-    navigate(`../${newPage + 1}/?per_page=${rowsPerPage}&id=${filter}`);
+    navigate(`../${newPage}/?per_page=${rowsPerPage}&id=${filter}`);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -79,6 +95,8 @@ export default function TableCustom() {
       setPage(1);
     }
   }
+
+  const classes = useStyles();
   return (
     <>
       <TableContainer
@@ -86,7 +104,8 @@ export default function TableCustom() {
         sx={{
           maxWidth: 480,
           width: '100%',
-          padding: 1.5
+          padding: 1.5,
+          maxHeight: '100vh'
         }}
       >
         <Box
@@ -99,12 +118,13 @@ export default function TableCustom() {
           }}
         >
           <TextField
-            label="Size"
+            label="Filter by id"
             id="outlined-size-small"
             defaultValue="Small"
             size="small"
             type="number"
             value={filter}
+            className={classes.input}
             onChange={(e) => {
               onChangeFilter(e);
             }}
@@ -116,8 +136,9 @@ export default function TableCustom() {
                       setFilter('');
                       navigate(`../${page}/?per_page=${rowsPerPage}&id=`);
                     }}
+                    size="small"
                   >
-                    <BackspaceIcon />
+                    <BackspaceIcon fontSize="small" />
                   </IconButton>
                 ) : (
                   ''
@@ -147,6 +168,7 @@ export default function TableCustom() {
             <Button
               onClick={() => {
                 setPage(1);
+                setFilter('');
                 navigate(`../1/?per_page=${rowsPerPage}&id=`);
               }}
             >

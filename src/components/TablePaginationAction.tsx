@@ -58,6 +58,7 @@ export default function TablePaginationActions(props) {
           value={rowsPerPage}
           variant="standard"
           onChange={onRowsPerPageChange}
+          sx={{ appearance: 'none' }}
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={10}>10</MenuItem>
@@ -87,7 +88,9 @@ export default function TablePaginationActions(props) {
           <KeyboardArrowLeft />
         )}
       </IconButton>
-      <Typography sx={{ padding: '0 10px' }}>{page}</Typography>
+      <Typography data-testid="page" sx={{ padding: '0 10px' }}>
+        {page}
+      </Typography>
       <IconButton
         data-testid="next-button"
         onClick={handleNextButtonClick}

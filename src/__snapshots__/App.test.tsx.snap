@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Table test next page 2 1`] = `
+<p
+  class="MuiTypography-root MuiTypography-body1 css-1k9rmp9-MuiTypography-root"
+  data-testid="page"
+>
+  1
+</p>
+`;
