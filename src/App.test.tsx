@@ -1,9 +1,17 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+  getByRole,
+  getByText
+} from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import ThemeValueProivider from './context/ThemeValueContext';
 import App from './App';
 import userEvent from '@testing-library/user-event';
+import UserEvent from '@testing-library/user-event';
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios, { AxiosResponse } from 'axios';
 import { useThemeValue } from './context/ThemeValueContext';
@@ -123,10 +131,25 @@ describe('Table test', () => {
         </Provider>
       );
     });
+
     const themebutton = await screen.getByTestId('theme-button');
     userEvent.click(themebutton);
     waitFor(() => expect(mode.result.current.mode).toBe('ligth'));
     userEvent.click(themebutton);
     waitFor(() => expect(mode.result.current.mode).toBe('dark'));
+  });
+  test('perpage', async () => {
+    render(
+      <Provider store={store}>
+        <ThemeValueProivider>
+          <App />
+        </ThemeValueProivider>
+      </Provider>
+    );
+    const div = document.querySelector('#perpage');
+    console.log(div);
+    expect(div?.nodeValue);
+    // await waitFor(() => UserEvent.click(screen.getByText(/brazil/i)));
+    // expect(screen.getByRole('heading')).toHaveTextContent(/brazil/i);
   });
 });

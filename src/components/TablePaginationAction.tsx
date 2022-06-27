@@ -10,6 +10,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { InputLabel } from '@mui/material';
 import { Typography } from '@mui/material';
+import Select from '@mui/material/Select';
+
 export default function TablePaginationActions(props) {
   const theme = useTheme();
 
@@ -51,8 +53,21 @@ export default function TablePaginationActions(props) {
           gap: 2
         }}
       >
-        <InputLabel htmlFor="outlined-select-perpage">Per page:</InputLabel>
-        <TextField
+        <InputLabel>Per page:</InputLabel>
+        <Select
+          data-testid="perpage"
+          id="perpage"
+          value={rowsPerPage}
+          variant="standard"
+          onChange={onRowsPerPageChange}
+        >
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={15}>15</MenuItem>
+          <MenuItem value={25}>25</MenuItem>
+          <MenuItem value={count}>All</MenuItem>
+        </Select>
+        {/* <TextField
           inputProps={{
             'data-testid': 'perpage'
           }}
@@ -67,7 +82,7 @@ export default function TablePaginationActions(props) {
           <MenuItem value={15}>15</MenuItem>
           <MenuItem value={25}>25</MenuItem>
           <MenuItem value={count}>All</MenuItem>
-        </TextField>
+        </TextField> */}
       </Box>
 
       <IconButton
