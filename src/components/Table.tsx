@@ -148,6 +148,7 @@ export default function TableCustom() {
           <IconButton
             onClick={() => {
               setMode(mode === 'dark' ? 'light' : 'dark');
+              localStorage.setItem('mode', mode === 'dark' ? 'light' : 'dark');
             }}
             data-testid="theme-button"
           >
