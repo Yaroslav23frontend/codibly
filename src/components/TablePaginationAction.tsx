@@ -51,9 +51,12 @@ export default function TablePaginationActions(props) {
           gap: 2
         }}
       >
-        <InputLabel>Per page:</InputLabel>
+        <InputLabel htmlFor="outlined-select-perpage">Per page:</InputLabel>
         <TextField
-          id="outlined-select-currency"
+          inputProps={{
+            'data-testid': 'perpage'
+          }}
+          id="outlined-select-perpage"
           select
           value={rowsPerPage}
           variant="standard"

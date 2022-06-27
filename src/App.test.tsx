@@ -4,9 +4,9 @@ import { store } from './store/store';
 import ThemeValueProivider from './context/ThemeValueContext';
 import App from './App';
 import userEvent from '@testing-library/user-event';
-import { act } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import axios, { AxiosResponse } from 'axios';
-
+import { useThemeValue } from './context/ThemeValueContext';
 describe('Table test', () => {
   afterEach(() => {
     jest.restoreAllMocks();
@@ -72,6 +72,7 @@ describe('Table test', () => {
         </Provider>
       );
     });
+
     const page = await screen.findByTestId('page');
     const next = await screen.getByTestId('next-button');
     const back = await screen.getByTestId('back-button');
@@ -98,7 +99,6 @@ describe('Table test', () => {
         </Provider>
       );
     });
-
     const input = (await screen.getByLabelText(
       /Filter by id/i
     )) as HTMLInputElement;
@@ -107,5 +107,26 @@ describe('Table test', () => {
     console.log(input.value);
     expect(input.value).toBe('1');
     expect(items.length).toBeGreaterThan(1);
+  });
+  test('theme', async () => {
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(mAxiosResponse);
+    const wrapper = ({ children }) => (
+      <ThemeValueProivider>{children}</ThemeValueProivider>
+    );
+    const mode = renderHook(() => useThemeValue(), { wrapper });
+    act(() => {
+      render(
+        <Provider store={store}>
+          <ThemeValueProivider>
+            <App />
+          </ThemeValueProivider>
+        </Provider>
+      );
+    });
+    const themebutton = await screen.getByTestId('theme-button');
+    userEvent.click(themebutton);
+    waitFor(() => expect(mode.result.current.mode).toBe('ligth'));
+    userEvent.click(themebutton);
+    waitFor(() => expect(mode.result.current.mode).toBe('dark'));
   });
 });

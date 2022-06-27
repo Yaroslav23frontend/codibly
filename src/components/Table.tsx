@@ -146,6 +146,7 @@ export default function TableCustom() {
             onClick={() => {
               setMode(mode === 'dark' ? 'light' : 'dark');
             }}
+            data-testid="theme-button"
           >
             {mode === 'ligth' ? <Brightness4Icon /> : <Brightness7Icon />}
           </IconButton>
@@ -199,7 +200,7 @@ export default function TableCustom() {
               <TableBody>
                 {data.map((row) => (
                   <TableRow
-                    key={row.id}
+                    key={`row-item-${row.id}`}
                     data-testid="table-item"
                     sx={{ backgroundColor: row.color, height: 10 }}
                   >
