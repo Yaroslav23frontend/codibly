@@ -22,6 +22,7 @@ import { uploadTable } from '../store/action';
 import { IRootState } from '../store/store';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import { makeStyles } from '@material-ui/styles';
+import { url } from '../api/url';
 const useStyles = makeStyles({
   input: {
     '& input[type=number]': {
@@ -79,13 +80,7 @@ export default function TableCustom() {
     if (isNaN(page)) {
       return setError('Not Found');
     } else {
-      fetchData(
-        'https://reqres.in/api/products',
-        page,
-        rowsPerPage,
-        filter,
-        uploadTable
-      );
+      fetchData(url, page, rowsPerPage, filter, uploadTable);
     }
   }, [page, rowsPerPage, filter]);
   function onChangeFilter(e) {
