@@ -100,7 +100,10 @@ export default function TableCustom() {
           maxWidth: 480,
           width: '100%',
           padding: 1.5,
-          maxHeight: '100vh'
+          maxHeight: '100vh',
+          '@media screen and (max-width: 500px)': {
+            maxWidth: '320px'
+          }
         }}
       >
         <Box
