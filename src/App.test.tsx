@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import ThemeValueProivider from './context/ThemeValueContext';
@@ -85,5 +85,27 @@ describe('Table test', () => {
     expect(Number(page.textContent)).toBe(3);
     await waitFor(() => userEvent.click(first));
     expect(Number(page.textContent)).toBe(1);
+  });
+
+  test('filter', async () => {
+    jest.spyOn(axios, 'get').mockResolvedValueOnce(mAxiosResponse);
+    act(() => {
+      render(
+        <Provider store={store}>
+          <ThemeValueProivider>
+            <App />
+          </ThemeValueProivider>
+        </Provider>
+      );
+    });
+
+    const input = (await screen.getByLabelText(
+      /Filter by id/i
+    )) as HTMLInputElement;
+    const items = await screen.findAllByTestId('table-item');
+    fireEvent.change(input, { target: { value: 1 } });
+    console.log(input.value);
+    expect(input.value).toBe('1');
+    expect(items.length).toBeGreaterThan(1);
   });
 });

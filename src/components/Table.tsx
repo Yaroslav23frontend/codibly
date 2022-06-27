@@ -113,6 +113,7 @@ export default function TableCustom() {
           }}
         >
           <TextField
+            data-testid="filter-input"
             label="Filter by id"
             id="outlined-size-small"
             defaultValue="Small"
