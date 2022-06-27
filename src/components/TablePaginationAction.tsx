@@ -58,7 +58,6 @@ export default function TablePaginationActions(props) {
           value={rowsPerPage}
           variant="standard"
           onChange={onRowsPerPageChange}
-          sx={{ appearance: 'none' }}
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={10}>10</MenuItem>

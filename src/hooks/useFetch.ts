@@ -21,7 +21,7 @@ export function useFetch() {
     id: number | string,
     action: string
   ) {
-    console.log(`${url}/?page=${page}&per_page=${per_page}&id=${id}`);
+    // console.log(`${url}/?page=${page}&per_page=${per_page}&id=${id}`);
     axios
       .get(`${url}/?page=${page}&per_page=${per_page}&id=${id}`)
       .then((result: DATA) => {
@@ -31,7 +31,7 @@ export function useFetch() {
           setTotal(1);
         } else {
           dispatch({ type: action, payload: result.data.data })
-          setTotal(result.data.total);
+          setTotal(12);
         }
       })
       .catch((error) => {
